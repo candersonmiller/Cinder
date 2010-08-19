@@ -39,7 +39,8 @@ class iphonenetworkApp : public AppCocoaTouch  {
 	
 	
 	float testX,testY,testRadius;
-	
+	gl::Texture mapBG;
+	UIImage* mapBGUI;
 	bool convertedData;
 	void makeUseable();
 	NSMutableArray*	mFoodEvents;
@@ -47,12 +48,13 @@ class iphonenetworkApp : public AppCocoaTouch  {
 
 void iphonenetworkApp::setup()
 {
+	mapBGUI = [[UIImage alloc] initWithContentsOfFile:@"map.png"];
 	convertedData = false;
 	request = [[HTTPWrapper alloc] init];
 	[request setURL:@"http://api.freefood4free.org/events/new"];
 	[request startRequest];
 	mCubeRotation.setToIdentity();
-
+	mapBG = gl::Texture( loadImage(loadResource("map.png")));
 	// Create a blue-green gradient as an OpenGL texture
 	Surface8u surface( 256, 256, false );
 	Surface8u::Iter iter = surface.getIter();
@@ -72,7 +74,7 @@ void iphonenetworkApp::makeUseable(){
 		NSMutableData* theData = [request data];
 		mFoodEvents = [[NSMutableArray alloc] init];
 		NSString* theString = [[NSString alloc] initWithData:theData encoding:NSUTF8StringEncoding];
-
+		
 		
 		id foodEventReturnType = [theString JSONValue];
 		BOOL validReturn = NO;
@@ -150,16 +152,22 @@ void iphonenetworkApp::update()
 
 void iphonenetworkApp::draw()
 {
+	
+	
+	
 	gl::clear( Color( 0.2f, 0.2f, 0.3f ) );
 	gl::enableDepthRead();
+	//gl::clear();//Color(1,1,1),true
+	//glColor3f(1.0f,1.0f,1.0f);
 
-	if( [request isFinished] {		
+	
+	if( [request isFinished] ){		
 		if([request hasData]){
 			makeUseable();
 			glPushMatrix();
 				gl::scale(Vec3f(0.1f,0.1f,0.1f));
 				gl::scale(Vec3f(0.13f, 0.10f,0.10f));
-				gl::drawSolidCircle(Vec2f(testX*77,testY*100),1.0f);
+				//gl::drawSolidCircle(Vec2f(testX*77,testY*100),1.0f);
 				//NSLog(@"a: %f b: %f",testX*77,testY*9.17);
 				
 				glPushMatrix();
@@ -182,7 +190,19 @@ void iphonenetworkApp::draw()
 	}else{
 		
 	}
-
+	glPushMatrix();
+	glEnable( GL_TEXTURE_2D );
+	//Color(0.0f, 0.0f, 0.0f);
+	gl::scale(Vec3f(5.0f,5.0f,1.0f));
+	gl::draw(mapBG);
+	CGRect temp;
+	temp.origin = CGPointMake(0, 0);
+	temp.size = CGSizeMake(1024, 768);
+	[mapBGUI drawInRect:temp];
+	NSData* data = UIImagePNGRepresentation(mapBGUI);
+	
+	glDisable( GL_TEXTURE_2D );
+	glPopMatrix();
 }
 
 CINDER_APP_COCOA_TOUCH( iphonenetworkApp, RendererGl )

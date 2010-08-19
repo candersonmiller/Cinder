@@ -34,10 +34,11 @@
 		
 		
 		//NSLog(@"event: %@ xPosition %f yPosition %f",event_id,xPosition, yPosition);
-		Color(CM_RGB, 0.0f, 0.0f, 0.0f );
-		gl::drawSolidCircle( Vec2f(xPosition,yPosition),1.0f);
+
 		Color(CM_RGB, 1.0f, 1.0f, 1.0f );
 		gl::drawSolidCircle( Vec2f(xPosition,yPosition),2.0f);
+		Color(CM_RGB, 0.0f, 0.0f, 0.0f );
+		gl::drawSolidCircle( Vec2f(xPosition,yPosition),1.0f);
 	}
 }
 
