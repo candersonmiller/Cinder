@@ -243,6 +243,8 @@ Texture::Texture( GLenum aTarget, GLuint aTextureID, int aWidth, int aHeight, bo
 	}
 }
 
+
+
 void Texture::init( const unsigned char *data, int unpackRowLength, GLenum dataFormat, GLenum type, const Format &format )
 {
 	mObj->mDoNotDispose = false;

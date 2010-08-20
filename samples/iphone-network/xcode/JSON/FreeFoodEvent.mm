@@ -25,20 +25,23 @@
 		float rightX = -73.8190f;
 		float lowY = 40.8026f;
 		float highY = 40.6832f;
-		float screenY = 9.152090*2;
-		float screenX = 76.799477*2;
-		float xPosition =   -9.152090 + abs(  (([event_geoLat floatValue] - lowY) / ( highY - lowY)) * screenY);
-		float yPosition = - 76.799477 + abs( ([event_geoLong floatValue] - leftX) / (leftX - rightX)) * screenX;
+		float screenY = 768;
+		float screenX = 1024;
+		float yPosition = abs(  (([event_geoLat floatValue] - lowY) / ( highY - lowY)) * screenY);
+		float xPosition = abs( ([event_geoLong floatValue] - leftX) / (leftX - rightX)) * screenX;
 		
 		
 		
 		
 		//NSLog(@"event: %@ xPosition %f yPosition %f",event_id,xPosition, yPosition);
-
-		Color(CM_RGB, 1.0f, 1.0f, 1.0f );
-		gl::drawSolidCircle( Vec2f(xPosition,yPosition),2.0f);
-		Color(CM_RGB, 0.0f, 0.0f, 0.0f );
-		gl::drawSolidCircle( Vec2f(xPosition,yPosition),1.0f);
+		
+		Vec2f center = getWindowCenter();
+		center.normalize();
+		
+		gl::color(Color(1.0f, 0.0f, 1.0f ));
+		gl::drawSolidCircle( center + Vec2f(xPosition,yPosition),5.0f);
+		gl::color(Color(0.0f, 0.0f, 0.0f ));
+		gl::drawSolidCircle( center + Vec2f(xPosition,yPosition),3.0f);
 	}
 }
 

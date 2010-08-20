@@ -67,6 +67,7 @@ void iphonenetworkApp::setup()
 	}
 	
 	mTex = gl::Texture( surface );
+	NSLog(@"step 1");
 }
 
 void iphonenetworkApp::makeUseable(){
@@ -150,16 +151,47 @@ void iphonenetworkApp::update()
 	//mCubeRotation.rotate( Vec3f( 1, 1, 1 ), 0.03f );
 }
 
+
+
 void iphonenetworkApp::draw()
 {
-	
-	
+	//NSLog(@"step 2");
+	gl::setMatricesWindow( getWindowSize(), false );
+	gl::enableAlphaBlending();
+	gl::clear( Color( 0.5, 0.5, 0.5 ) );
+	if(mapBG)
+	{
+		
+		gl::color(ColorA(1.0f, 1.0f, 1.0f, 1.0f) );
+		gl::translate(Vec3f(768.0f,1024.0f,0.0f));
+		gl::rotate(Vec3f(180.0f,0.0f,0.0f));
+		gl::rotate(Vec3f(0.0f,0.0f,90.0f));
+		// try both ways
+		gl::draw( mapBG );
+		
+		if( [request isFinished] ){		
+			if([request hasData]){
+				makeUseable();
+				glPushMatrix();
+				Vec2f center = getWindowCenter();
+				center.normalize();
+				//gl::drawSolidCircle(center,30.0f);
+				for(int i = 0; i < [mFoodEvents count]; i++){
+					[[mFoodEvents objectAtIndex:i] render];
+				}
+				glPopMatrix();
+			}
+		}
+		//gl::draw( mapBG, Rectf( offset.x, offset.y, bounds.x, bounds.y ) );
+	}
+	/*
 	
 	gl::clear( Color( 0.2f, 0.2f, 0.3f ) );
 	gl::enableDepthRead();
+	
 	//gl::clear();//Color(1,1,1),true
 	//glColor3f(1.0f,1.0f,1.0f);
-
+	//NSLog(@"step 3");
 	
 	if( [request isFinished] ){		
 		if([request hasData]){
@@ -177,32 +209,38 @@ void iphonenetworkApp::draw()
 					}
 				glPopMatrix();
 			glPopMatrix();
-//			mTex.bind();
-//			gl::setMatrices( mCam );
-//			glPushMatrix();
-//			gl::multModelView( mCubeRotation );
-//			gl::drawCube( Vec3f::zero(), Vec3f( 2.0f, 2.0f, 2.0f ) );
-//			glPopMatrix();
+
 		}
 	}else if( [request isFailed] ){
 		
 		
 	}else{
-		
+
 	}
-	glPushMatrix();
-	glEnable( GL_TEXTURE_2D );
-	//Color(0.0f, 0.0f, 0.0f);
-	gl::scale(Vec3f(5.0f,5.0f,1.0f));
-	gl::draw(mapBG);
-	CGRect temp;
-	temp.origin = CGPointMake(0, 0);
-	temp.size = CGSizeMake(1024, 768);
-	[mapBGUI drawInRect:temp];
-	NSData* data = UIImagePNGRepresentation(mapBGUI);
-	
-	glDisable( GL_TEXTURE_2D );
-	glPopMatrix();
+	glEnable(GL_TEXTURE_2D);
+	//NSLog(@"step 4");
+	mapBG.bind();
+	glDisable(GL_TEXTURE_2D);
+	//NSLog(@"step 5");
+	//NSLog(@"%d", mapBG.getWidth());
+	//NSLog(@"step 6");
+	//glPushMatrix();
+//	glEnable( GL_TEXTURE_2D );
+//	//Color(0.0f, 0.0f, 0.0f);
+//	//gl::scale(Vec3f(5.0f,5.0f,1.0f));
+//	//gl::draw(mapBG);
+//	CGRect temp;
+//	temp.origin = CGPointMake(0, 0);
+//	temp.size = CGSizeMake(1024, 768);
+//	//[mapBGUI drawInRect:temp];
+//	CGImageRef imageRef = [mapBGUI CGImage];
+//	NSLog(@"test 1 %@  %@",imageRef,mapBGUI);
+//	CGContextRef theContext = createWindowCgContext();
+//	CGContextDrawImage(theContext, temp,imageRef );
+//	NSLog(@"test 2");
+//	glDisable( GL_TEXTURE_2D );
+//	glPopMatrix();
+	 */
 }
 
 CINDER_APP_COCOA_TOUCH( iphonenetworkApp, RendererGl )
